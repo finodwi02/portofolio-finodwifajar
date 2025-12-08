@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { Link } from "react-scroll";
 import { motion, AnimatePresence } from "framer-motion";

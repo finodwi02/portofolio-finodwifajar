@@ -1,12 +1,11 @@
-import React from "react";
+
 import { motion } from "framer-motion";
 // Mengimpor ikon-ikon teknologi
 import {
   FaHtml5,
   FaCss3Alt,
   FaReact,
-  FaNodeJs,
-  FaDatabase,
+
 } from "react-icons/fa";
 import {
   SiTypescript,
