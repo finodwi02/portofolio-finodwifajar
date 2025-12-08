@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import {
   FaPaperPlane,
@@ -25,7 +25,7 @@ const Contact = () => {
   const [status, setStatus] = useState("");
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -61,7 +61,7 @@ const Contact = () => {
     return isValid;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     // Cek Validasi Dulu
@@ -72,10 +72,8 @@ const Contact = () => {
     setStatus("sending");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/contact",
-        formData
-      );
+      // PENTING: Menggunakan jalur API Vercel Serverless
+      const response = await axios.post("/api/contact", formData);
 
       if (response.status === 200) {
         setStatus("success");
@@ -91,7 +89,7 @@ const Contact = () => {
     } catch (error) {
       console.error(error);
       setStatus("error");
-      alert("Gagal mengirim pesan. Pastikan server backend menyala.");
+      alert("Gagal mengirim pesan.");
     }
   };
 
