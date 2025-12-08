@@ -1,8 +1,8 @@
 import { useState } from "react";
-// PERBAIKAN DI SINI: Pisahkan import Type agar tidak error
+// Import Type agar tidak error
 import type { ChangeEvent, FormEvent } from "react";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaPaperPlane,
   FaPhoneAlt,
@@ -11,6 +11,7 @@ import {
   FaGithub,
   FaLinkedin,
   FaInstagram,
+  FaCheckCircle, // Ikon Centang
 } from "react-icons/fa";
 import axios from "axios";
 
@@ -23,26 +24,21 @@ const Contact = () => {
     message: "",
   });
 
-  // State untuk menyimpan pesan error
   const [errors, setErrors] = useState<any>({});
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(""); // status: "", "sending", "success", "error"
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    // Hilangkan error merah saat user mulai mengetik
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: "" });
     }
   };
 
-  // FUNGSI VALIDASI CUSTOM
   const validateForm = () => {
     let newErrors: any = {};
     let isValid = true;
-
     if (!formData.name) {
       newErrors.name = "Ups, Nama jangan dikosongin dong!";
       isValid = false;
@@ -59,23 +55,17 @@ const Contact = () => {
       newErrors.message = "Jangan lupa tulis pesannya ya! ";
       isValid = false;
     }
-
     setErrors(newErrors);
     return isValid;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    // Cek Validasi Dulu
-    if (!validateForm()) {
-      return; // Stop jika ada error
-    }
+    if (!validateForm()) return;
 
     setStatus("sending");
 
     try {
-      // Menggunakan jalur API Vercel Serverless
       const response = await axios.post("/api/contact", formData);
 
       if (response.status === 200) {
@@ -87,11 +77,17 @@ const Contact = () => {
           subject: "",
           message: "",
         });
-        alert("Pesan berhasil terkirim!");
+
+        // HAPUS alert() DISINI
+        // Pesan sukses akan muncul otomatis lewat kode di bawah
+
+        // Kembalikan tombol setelah 5 detik
+        setTimeout(() => setStatus(""), 5000);
       }
     } catch (error) {
       console.error(error);
       setStatus("error");
+      // Pesan error juga bisa kita buat custom jika mau
       alert("Gagal mengirim pesan.");
     }
   };
@@ -112,7 +108,7 @@ const Contact = () => {
         </div>
 
         <div className="grid lg:grid-cols-5 gap-8">
-          {/* KOLOM KIRI: INFO KONTAK */}
+          {/* KOLOM KIRI */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -134,10 +130,8 @@ const Contact = () => {
                 </p>
                 <p className="py-4 text-gray-600 dark:text-gray-300">
                   Saya terbuka untuk peluang kerjasama freelance atau full-time.
-                  Hubungi saya dan mari berdiskusi.
                 </p>
               </div>
-
               <div className="space-y-4">
                 <div className="flex items-center gap-4 text-gray-600 dark:text-gray-300">
                   <FaPhoneAlt className="text-blue-600" />{" "}
@@ -155,7 +149,7 @@ const Contact = () => {
             </div>
           </motion.div>
 
-          {/* KOLOM KANAN: FORMULIR INPUT */}
+          {/* KOLOM KANAN */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -164,6 +158,7 @@ const Contact = () => {
           >
             <div className="p-4">
               <form onSubmit={handleSubmit} noValidate>
+                {/* ... (INPUT FIELD SAMA SEPERTI SEBELUMNYA) ... */}
                 <div className="grid md:grid-cols-2 gap-4 w-full py-2">
                   <div className="flex flex-col">
                     <label className="uppercase text-sm py-2 dark:text-gray-200">
@@ -175,18 +170,15 @@ const Contact = () => {
                       onChange={handleChange}
                       className={`border-2 rounded-lg p-3 flex dark:bg-slate-700 dark:text-white outline-none ${
                         errors.name
-                          ? "border-red-500 focus:border-red-500"
-                          : "border-gray-300 focus:border-blue-500 dark:border-slate-600"
+                          ? "border-red-500"
+                          : "border-gray-300 dark:border-slate-600"
                       }`}
                       type="text"
                     />
                     {errors.name && (
-                      <p className="text-red-500 text-xs mt-1 animate-pulse">
-                        {errors.name}
-                      </p>
+                      <p className="text-red-500 text-xs mt-1">{errors.name}</p>
                     )}
                   </div>
-
                   <div className="flex flex-col">
                     <label className="uppercase text-sm py-2 dark:text-gray-200">
                       Phone Number
@@ -195,7 +187,7 @@ const Contact = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="border-2 rounded-lg p-3 flex border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:border-blue-500 outline-none"
+                      className="border-2 rounded-lg p-3 flex border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white outline-none"
                       type="text"
                     />
                   </div>
@@ -211,15 +203,13 @@ const Contact = () => {
                     onChange={handleChange}
                     className={`border-2 rounded-lg p-3 flex dark:bg-slate-700 dark:text-white outline-none ${
                       errors.email
-                        ? "border-red-500 focus:border-red-500"
-                        : "border-gray-300 focus:border-blue-500 dark:border-slate-600"
+                        ? "border-red-500"
+                        : "border-gray-300 dark:border-slate-600"
                     }`}
                     type="email"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1 animate-pulse">
-                      {errors.email}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                   )}
                 </div>
 
@@ -233,13 +223,13 @@ const Contact = () => {
                     onChange={handleChange}
                     className={`border-2 rounded-lg p-3 flex dark:bg-slate-700 dark:text-white outline-none ${
                       errors.subject
-                        ? "border-red-500 focus:border-red-500"
-                        : "border-gray-300 focus:border-blue-500 dark:border-slate-600"
+                        ? "border-red-500"
+                        : "border-gray-300 dark:border-slate-600"
                     }`}
                     type="text"
                   />
                   {errors.subject && (
-                    <p className="text-red-500 text-xs mt-1 animate-pulse">
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.subject}
                     </p>
                   )}
@@ -255,30 +245,49 @@ const Contact = () => {
                     onChange={handleChange}
                     className={`border-2 rounded-lg p-3 dark:bg-slate-700 dark:text-white outline-none ${
                       errors.message
-                        ? "border-red-500 focus:border-red-500"
-                        : "border-gray-300 focus:border-blue-500 dark:border-slate-600"
+                        ? "border-red-500"
+                        : "border-gray-300 dark:border-slate-600"
                     }`}
                     rows={6}
                   ></textarea>
                   {errors.message && (
-                    <p className="text-red-500 text-xs mt-1 animate-pulse">
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.message}
                     </p>
                   )}
                 </div>
 
-                <button
-                  className="w-full p-4 text-gray-100 mt-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold flex items-center justify-center gap-2 disabled:bg-gray-400"
-                  disabled={status === "sending"}
-                >
-                  {status === "sending" ? (
-                    "Sending..."
+                {/* --- TOMBOL KIRIM BERUBAH JADI PESAN SUKSES --- */}
+                <div className="mt-4">
+                  {status === "success" ? (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="w-full p-4 bg-green-500 text-white rounded-lg font-bold flex flex-col items-center justify-center text-center shadow-lg"
+                    >
+                      <div className="flex items-center gap-2 text-xl mb-1">
+                        <FaCheckCircle className="text-white text-3xl" />
+                        <span>Pesan Terkirim!</span>
+                      </div>
+                      <p className="text-sm font-normal text-green-100">
+                        Terima kasih, Fino akan segera membalasnya.
+                      </p>
+                    </motion.div>
                   ) : (
-                    <>
-                      Send Message <FaPaperPlane />
-                    </>
+                    <button
+                      className="w-full p-4 text-gray-100 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold flex items-center justify-center gap-2 disabled:bg-gray-400 transition-colors"
+                      disabled={status === "sending"}
+                    >
+                      {status === "sending" ? (
+                        "Sending..."
+                      ) : (
+                        <>
+                          Send Message <FaPaperPlane />
+                        </>
+                      )}
+                    </button>
                   )}
-                </button>
+                </div>
               </form>
             </div>
           </motion.div>
@@ -311,7 +320,6 @@ const Contact = () => {
               <FaInstagram />
             </a>
           </div>
-
           <div className="text-center text-sm text-gray-500 dark:text-gray-400">
             <p className="mb-1">
               © {new Date().getFullYear()}{" "}
