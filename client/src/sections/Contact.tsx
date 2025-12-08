@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // Import Type agar tidak error
 import type { ChangeEvent, FormEvent } from "react";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   FaPaperPlane,
   FaPhoneAlt,
@@ -11,7 +11,7 @@ import {
   FaGithub,
   FaLinkedin,
   FaInstagram,
-  FaCheckCircle, // Ikon Centang
+  FaCheckCircle, // Ikon Centang Baru
 } from "react-icons/fa";
 import axios from "axios";
 
@@ -25,7 +25,7 @@ const Contact = () => {
   });
 
   const [errors, setErrors] = useState<any>({});
-  const [status, setStatus] = useState(""); // status: "", "sending", "success", "error"
+  const [status, setStatus] = useState("");
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,6 +35,16 @@ const Contact = () => {
       setErrors({ ...errors, [e.target.name]: "" });
     }
   };
+
+  // Reset status sukses setelah 5 detik
+  useEffect(() => {
+    if (status === "success") {
+      const timer = setTimeout(() => {
+        setStatus("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const validateForm = () => {
     let newErrors: any = {};
@@ -77,18 +87,12 @@ const Contact = () => {
           subject: "",
           message: "",
         });
-
-        // HAPUS alert() DISINI
-        // Pesan sukses akan muncul otomatis lewat kode di bawah
-
-        // Kembalikan tombol setelah 5 detik
-        setTimeout(() => setStatus(""), 5000);
+        // KITA HAPUS alert() DISINI AGAR TIDAK MUNCUL POPUP
       }
     } catch (error) {
       console.error(error);
       setStatus("error");
-      // Pesan error juga bisa kita buat custom jika mau
-      alert("Gagal mengirim pesan.");
+      alert("Gagal mengirim pesan."); // Kalau error boleh tetap pakai alert
     }
   };
 
@@ -158,7 +162,6 @@ const Contact = () => {
           >
             <div className="p-4">
               <form onSubmit={handleSubmit} noValidate>
-                {/* ... (INPUT FIELD SAMA SEPERTI SEBELUMNYA) ... */}
                 <div className="grid md:grid-cols-2 gap-4 w-full py-2">
                   <div className="flex flex-col">
                     <label className="uppercase text-sm py-2 dark:text-gray-200">
@@ -257,25 +260,20 @@ const Contact = () => {
                   )}
                 </div>
 
-                {/* --- TOMBOL KIRIM BERUBAH JADI PESAN SUKSES --- */}
+                {/* --- LOGIKA TOMBOL BARU --- */}
                 <div className="mt-4">
                   {status === "success" ? (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.5 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="w-full p-4 bg-green-500 text-white rounded-lg font-bold flex flex-col items-center justify-center text-center shadow-lg"
+                      className="w-full p-4 bg-green-500 text-white rounded-lg font-bold flex items-center justify-center gap-3 shadow-lg"
                     >
-                      <div className="flex items-center gap-2 text-xl mb-1">
-                        <FaCheckCircle className="text-white text-3xl" />
-                        <span>Pesan Terkirim!</span>
-                      </div>
-                      <p className="text-sm font-normal text-green-100">
-                        Terima kasih, Fino akan segera membalasnya.
-                      </p>
+                      <FaCheckCircle className="text-2xl" />
+                      <span>Pesan Berhasil Terkirim!</span>
                     </motion.div>
                   ) : (
                     <button
-                      className="w-full p-4 text-gray-100 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold flex items-center justify-center gap-2 disabled:bg-gray-400 transition-colors"
+                      className="w-full p-4 text-gray-100 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold flex items-center justify-center gap-2 disabled:bg-gray-400 transition-all active:scale-95"
                       disabled={status === "sending"}
                     >
                       {status === "sending" ? (
@@ -294,7 +292,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* --- FOOTER --- */}
+      {/* --- FOOTER (Tetap Sama) --- */}
       <div className="w-full mt-20 border-t border-gray-300 dark:border-gray-700 pt-8">
         <div className="flex flex-col items-center justify-center gap-4">
           <div className="flex gap-6 text-2xl text-gray-600 dark:text-gray-400">
