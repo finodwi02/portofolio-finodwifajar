@@ -1,4 +1,7 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
+// PERBAIKAN DI SINI: Pisahkan import Type agar tidak error
+import type { ChangeEvent, FormEvent } from "react";
+
 import { motion } from "framer-motion";
 import {
   FaPaperPlane,
@@ -72,7 +75,7 @@ const Contact = () => {
     setStatus("sending");
 
     try {
-      // PENTING: Menggunakan jalur API Vercel Serverless
+      // Menggunakan jalur API Vercel Serverless
       const response = await axios.post("/api/contact", formData);
 
       if (response.status === 200) {
@@ -160,7 +163,6 @@ const Contact = () => {
             className="col-span-3 w-full h-auto shadow-xl shadow-gray-400 rounded-xl lg:p-4 bg-white dark:bg-slate-800 dark:shadow-none"
           >
             <div className="p-4">
-              {/* Tambahkan noValidate agar bubble browser hilang */}
               <form onSubmit={handleSubmit} noValidate>
                 <div className="grid md:grid-cols-2 gap-4 w-full py-2">
                   <div className="flex flex-col">
@@ -171,7 +173,6 @@ const Contact = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      // Logika Class: Jika Error, border jadi Merah. Jika tidak, abu-abu.
                       className={`border-2 rounded-lg p-3 flex dark:bg-slate-700 dark:text-white outline-none ${
                         errors.name
                           ? "border-red-500 focus:border-red-500"
@@ -179,7 +180,6 @@ const Contact = () => {
                       }`}
                       type="text"
                     />
-                    {/* Tampilkan Pesan Error di Bawah Input */}
                     {errors.name && (
                       <p className="text-red-500 text-xs mt-1 animate-pulse">
                         {errors.name}
