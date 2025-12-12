@@ -13,7 +13,7 @@ const projectData = [
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     githubUrl:
       "https://github.com/finodwi02/Hello-Project---103032430017-Fino-Dwi-Fajar",
-    demoUrl: "#",
+    demoUrl: "https://replit.com/@finodwifajar/Go-Lang",
   },
   {
     id: 2,
