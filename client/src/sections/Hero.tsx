@@ -88,7 +88,7 @@ const Hero = () => {
             {/* Tombol Download CV (Mengunduh File PDF) */}
             {/* Pastikan file cv.pdf ada di folder public */}
             <a
-              href="/cv (1).pdf"
+              href="/cv-fino-v2.pdf"
               download="CV_Fino_Dwi_Fajar.pdf"
               className="flex items-center"
             >
