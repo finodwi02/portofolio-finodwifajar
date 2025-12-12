@@ -139,11 +139,11 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-4 text-gray-600 dark:text-gray-300">
                   <FaPhoneAlt className="text-blue-600" />{" "}
-                  <span>+62 812 3456 7890</span>
+                  <span>+62 858 7690 7626</span>
                 </div>
                 <div className="flex items-center gap-4 text-gray-600 dark:text-gray-300">
                   <FaEnvelope className="text-blue-600" />{" "}
-                  <span>fino@example.com</span>
+                  <span>finodwifajarpribadi02@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-4 text-gray-600 dark:text-gray-300">
                   <FaMapMarkerAlt className="text-blue-600" />{" "}
